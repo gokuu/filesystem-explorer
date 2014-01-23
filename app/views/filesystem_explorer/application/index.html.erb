@@ -1,0 +1,28 @@
+<%
+ paths = breakdown_path(@path)
+ current = paths.pop
+%>
+<div class="row">
+  <div class="col-md-12">
+    <ol class="breadcrumb">
+      <%paths.each do |directory, index| %>
+        <li><%= link_to(directory.is_root? ? filesystem_explorer_root_name : directory.name, File.join(filesystem_explorer_root_path, directory.path)) %></li>
+      <% end %>
+      <li class="active"><%= current.is_root? ? filesystem_explorer_root_name : current.name %></li>
+    </ol>
+  </div>
+</div>
+<table class="table">
+<thead>
+  <tr>
+    <th class="col-md-8">Name</th>
+    <th class="col-md-2">Modification date</th>
+    <th class="col-md-1">Size</th>
+    <th class="col-md-1"></th>
+  </tr>
+  </thead>
+  <tbody>
+    <%= render @path.parent if @path.parent %>
+    <%= render @path.children %>
+  </tbody>
+</table>

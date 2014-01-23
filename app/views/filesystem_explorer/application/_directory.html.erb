@@ -1,0 +1,6 @@
+<tr>
+  <td><i class="fa fa-folder"></i> <%= link_to directory.is_parent? ? '..' : directory.name, File.join(filesystem_explorer_root_path, u(directory.path)) %></td>
+  <td><%= directory.modified_at.strftime('%F %T') %></td>
+  <td></td>
+  <td></td>
+</tr>

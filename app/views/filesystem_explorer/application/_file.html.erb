@@ -1,0 +1,6 @@
+<tr>
+  <td><i class="fa fa-file-o"></i> <%= file.name %></td>
+  <td><%= file.modified_at.strftime('%F %T') %></td>
+  <td class="right"><%= number_to_human_size(file.size) %></td>
+  <td class="right"><%= link_to 'D', File.join(filesystem_explorer_root_path, file.path, 'download') %></td>
+</tr>
