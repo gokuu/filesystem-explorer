@@ -3,6 +3,12 @@ module ActionDispatch
     class Mapper
       def filesystem_explorer(options = {}, &block)
         route_config = FilesystemExplorer::FilesystemRouteOptions.new
+
+        # Copy all applicable options from the parameter hash to the object
+        %w(path as url).each do |option|
+          route_config.send option, options[option.to_sym] if options[option.to_sym] && route_config.respond_to?(option)
+        end
+
         route_config.instance_eval &block if block
 
         $filesystem_explorer_route_options ||= {}

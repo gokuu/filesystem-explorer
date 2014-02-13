@@ -18,6 +18,7 @@ module FilesystemExplorer
     def path ; return @full_path.gsub(/^#{@root}/, '').gsub(/^\//, '') ; end
     def is_root? ; return @full_path == @root ; end
     def is_parent? ; return @is_parent || false ; end
+    def exists? ; return File.exists?(@full_path) ; end
 
     def name ; @name ||= File.basename(path) ; end
     def modified_at ; @modified_at ||= File.mtime(@full_path) ; end

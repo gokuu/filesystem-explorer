@@ -1,5 +1,7 @@
 module FilesystemExplorer
   class ApplicationController < ::ApplicationController
+    ActionController::Streaming::X_SENDFILE_HEADER = 'X-Accel-Redirect'
+
     attr_reader :route
 
     helper_method :current_filesystem_explorer_path, :filesystem_explorer_root_path, :filesystem_explorer_root_name
@@ -10,12 +12,12 @@ module FilesystemExplorer
       @path = FilesystemExplorer::FilesystemItem.new(File.join(route.path, %Q[#{params[:path]}#{".#{params[:format]}" if params[:format]}]), root: route.path)
       @path.parent.instance_exec { @is_parent = true } if @path.parent
 
-      render :index
+      render @path.exists? ? :index : :not_found
     end
 
     def download
       @path = FilesystemExplorer::FilesystemItem.new(File.join('/', %Q[#{params[:path]}#{".#{params[:format]}" if params[:format]}]), root: route.path)
-      send_file @path.full_path, disposition: :attachment
+      send_file @path.full_path, disposition: :attachment, x_sendfile: true
     end
 
     def current_filesystem_explorer_path ; return @path ; end
