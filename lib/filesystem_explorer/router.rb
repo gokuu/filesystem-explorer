@@ -14,6 +14,8 @@ module ActionDispatch
         $filesystem_explorer_route_options ||= {}
         $filesystem_explorer_route_options[route_config.url] ||= route_config
 
+        FilesystemExplorer.routes << route_config
+
         Rails.application.routes.draw do
           # Download route
           route_options = { "#{route_config.url}/*path/download" => "filesystem_explorer/application#download" }

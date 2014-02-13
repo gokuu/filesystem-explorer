@@ -4,4 +4,5 @@ require 'filesystem_explorer/filesystem_route_options'
 require 'filesystem_explorer/router'
 
 module FilesystemExplorer
+  def self.routes ; @routes ||= [] ; end
 end
