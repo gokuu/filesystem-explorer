@@ -1,16 +1,12 @@
 module FilesystemExplorer
   module ApplicationHelper
     def breakdown_path(path)
-      Rails.logger.ap path
-      path_array = path.path.split('/')
+      paths = [path]
 
-      return [path] if path_array.empty?
+      while path = path.parent
+        paths.unshift path
+      end
 
-      paths = (0...path_array.length).map do |index|
-        FilesystemItem.new(path_array[0..index].join('/'), { root: path.root})
-      end.unshift(FilesystemItem.new('/', { root: path.root}))
-
-      Rails.logger.ap paths
       paths
     end
 

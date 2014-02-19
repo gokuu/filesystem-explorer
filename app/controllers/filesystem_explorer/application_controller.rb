@@ -9,7 +9,7 @@ module FilesystemExplorer
     before_filter :get_engine_configuration_options
 
     def index
-      @path = FilesystemExplorer::FilesystemItem.new(File.join(route.path, %Q[#{params[:path]}#{".#{params[:format]}" if params[:format]}]), root: route.path)
+      @path = FilesystemExplorer::FilesystemItem.new(route.path, %Q[#{params[:path]}#{".#{params[:format]}" if params[:format]}])
       @path.parent.instance_exec { @is_parent = true } if @path.parent
 
       render @path.exists? ? :index : :not_found
