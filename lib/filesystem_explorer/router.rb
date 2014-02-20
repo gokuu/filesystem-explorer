@@ -1,6 +1,20 @@
 module ActionDispatch
   module Routing
     class Mapper
+      def filesystem_routes(&block)
+        config_file_path = Rails.root.join('config', 'filesystem_explorer.yml')
+
+        if File.exists?(config_file_path)
+          config_data = YAML.load_file(config_file_path)
+
+          config_data.each do |route|
+            filesystem_explorer path: route[:path] || route['path'], as: route[:as] || route['as'], url: route[:url] || route['url']
+          end
+        end
+
+        block.call($filesystem_explorer_route_options || {}) if block
+      end
+
       def filesystem_explorer(options = {}, &block)
         route_config = FilesystemExplorer::FilesystemRouteOptions.new
 
