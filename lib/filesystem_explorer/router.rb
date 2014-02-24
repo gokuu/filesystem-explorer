@@ -1,6 +1,14 @@
 module ActionDispatch
   module Routing
     class Mapper
+      def initialize
+        if $filesystem_explorer_route_options.is_a?(Hash)
+          $filesystem_explorer_route_options.empty
+        else
+          $filesystem_explorer_route_options = {}
+        end
+      end
+
       def filesystem_routes(&block)
         config_file_path = Rails.root.join('config', 'filesystem_explorer.yml')
 
