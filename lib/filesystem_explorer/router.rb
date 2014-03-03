@@ -1,7 +1,7 @@
 module ActionDispatch
   module Routing
     class Mapper
-      def initialize
+      def filesystem_explorer_route_options
         if $filesystem_explorer_route_options.is_a?(Hash)
           $filesystem_explorer_route_options.empty
         else
@@ -20,7 +20,7 @@ module ActionDispatch
           end
         end
 
-        block.call($filesystem_explorer_route_options || {}) if block
+        block.call(filesystem_explorer_route_options || {}) if block
       end
 
       def filesystem_explorer(options = {}, &block)
@@ -33,8 +33,8 @@ module ActionDispatch
 
         route_config.instance_eval &block if block
 
-        $filesystem_explorer_route_options ||= {}
-        $filesystem_explorer_route_options[route_config.url] ||= route_config
+        filesystem_explorer_route_options ||= {}
+        filesystem_explorer_route_options[route_config.url] ||= route_config
 
         FilesystemExplorer.routes << route_config
 
