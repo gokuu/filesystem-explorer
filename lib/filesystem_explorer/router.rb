@@ -1,14 +1,6 @@
 module ActionDispatch
   module Routing
     class Mapper
-      def filesystem_explorer_route_options
-        if $filesystem_explorer_route_options.is_a?(Hash)
-          $filesystem_explorer_route_options.empty
-        else
-          $filesystem_explorer_route_options = {}
-        end
-      end
-
       def filesystem_routes(&block)
         config_file_path = Rails.root.join('config', 'filesystem_explorer.yml')
 
@@ -20,7 +12,7 @@ module ActionDispatch
           end
         end
 
-        block.call(filesystem_explorer_route_options || {}) if block
+        block.call(FilesystemExplorer::Engine.filesystem_explorer_route_options || {}) if block
       end
 
       def filesystem_explorer(options = {}, &block)
@@ -33,8 +25,7 @@ module ActionDispatch
 
         route_config.instance_eval &block if block
 
-        filesystem_explorer_route_options ||= {}
-        filesystem_explorer_route_options[route_config.url] ||= route_config
+        FilesystemExplorer::Engine.filesystem_explorer_route_options[route_config.url] ||= route_config
 
         FilesystemExplorer.routes << route_config
 

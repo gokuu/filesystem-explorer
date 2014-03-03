@@ -37,13 +37,13 @@ module FilesystemExplorer
     private
 
       def get_engine_configuration_options
-        $filesystem_explorer_route_options.each do |path, options|
+        FilesystemExplorer::Engine.filesystem_explorer_route_options.each do |path, options|
           @route = options and break if request.path =~ %r(^#{path})
         end
       end
 
       def get_engine_configuration_options_by_as(as)
-        $filesystem_explorer_route_options.each do |path, options|
+        FilesystemExplorer::Engine.filesystem_explorer_route_options.each do |path, options|
           return options if options.as.to_sym == as.to_sym
         end
 
