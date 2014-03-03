@@ -2,6 +2,8 @@ module ActionDispatch
   module Routing
     class Mapper
       def filesystem_routes(&block)
+        FilesystemExplorer.routes.clear
+
         config_file_path = Rails.root.join('config', 'filesystem_explorer.yml')
 
         if File.exists?(config_file_path)
