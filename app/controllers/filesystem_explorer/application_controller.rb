@@ -18,8 +18,8 @@ module FilesystemExplorer
     end
 
     def download
-      @path = FilesystemExplorer::FilesystemItem.new(File.join('/', %Q[#{params[:path]}#{".#{params[:format]}" if params[:format]}]), root: route.path)
-      send_file @path.full_path, disposition: :attachment, x_sendfile: true
+      @path = FilesystemExplorer::FilesystemItem.new(route.path, "#{params[:path]}")
+      redirect_to @path.full_path
     end
 
     def current_filesystem_explorer_path ; return @path ; end
