@@ -7,6 +7,8 @@ module FilesystemExplorer
     helper_method :current_filesystem_explorer_path, :filesystem_explorer_root_path, :filesystem_explorer_root_name
 
     before_filter :get_engine_configuration_options
+    before_filter :_filesystem_explorer_before_filter
+    after_filter :_filesystem_explorer_after_filter
 
     def index
       @path = FilesystemExplorer::FilesystemItem.new(route.path, "#{params[:path]}")
@@ -48,6 +50,20 @@ module FilesystemExplorer
         end
 
         return nil
+      end
+
+      def _filesystem_explorer_before_filter
+        begin
+          send :filesystem_explorer_before_filter, action_name, route
+        rescue NoMethodError => e
+        end
+      end
+
+      def _filesystem_explorer_after_filter
+        begin
+          send :filesystem_explorer_after_filter, action_name, route
+        rescue NoMethodError => e
+        end
       end
   end
 end
