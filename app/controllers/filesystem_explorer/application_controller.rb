@@ -1,7 +1,5 @@
 module FilesystemExplorer
   class ApplicationController < ::ApplicationController
-    ActionController::Streaming::X_SENDFILE_HEADER = 'X-Accel-Redirect'
-
     attr_reader :route
 
     helper_method :current_filesystem_explorer_path, :filesystem_explorer_root_path, :filesystem_explorer_root_name
