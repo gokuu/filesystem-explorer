@@ -17,7 +17,7 @@ module FilesystemExplorer
 
     def download
       @path = FilesystemExplorer::FilesystemItem.new(route.path, "#{params[:path]}")
-      send_file @path.full_path, disposition: :attachment
+      send_file @path.full_path
     end
 
     def current_filesystem_explorer_path ; return @path ; end
