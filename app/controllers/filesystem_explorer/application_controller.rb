@@ -9,14 +9,22 @@ module FilesystemExplorer
     after_filter :_filesystem_explorer_after_filter
 
     def index
-      @path = FilesystemExplorer::FilesystemItem.new(route.path, "#{params[:path]}")
+      @path = FilesystemExplorer::FilesystemItem.new(route.path, "#{params[:path]}", kind: route.kind)
       @path.parent.instance_exec { @is_parent = true } if @path.parent
 
-      render @path.exists? ? :index : :not_found
+      if @path.exists?
+        if @path.is_directory?
+          render @path.kind || :index
+        else
+          send_file @path.full_path, type: @path.mime_type, disposition: @path.disposition
+        end
+      else
+        render :not_found
+      end
     end
 
     def download
-      @path = FilesystemExplorer::FilesystemItem.new(route.path, "#{params[:path]}")
+      @path = FilesystemExplorer::FilesystemItem.new(route.path, "#{params[:path]}", kind: route.kind)
       send_file @path.full_path
     end
 

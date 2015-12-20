@@ -1,6 +1,6 @@
 module FilesystemExplorer
   class FilesystemRouteOptions
-    %w(as url path).each do |method|
+    %w(as url path kind).each do |method|
       attr_reader :"#{method}"
       instance_variable_set :"@#{method}", nil
 

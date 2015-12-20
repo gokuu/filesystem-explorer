@@ -1,0 +1,5 @@
+<div class="photo-thumbnail">
+  <span><%= link_to image_tag(photo.get_photo_thumbnail), File.join(filesystem_explorer_root_path, photo.path), class: 'photo-thumbnail-link' %></span>
+  <span><%= photo.name %></span>
+  <span><%= link_to 'D', File.join(filesystem_explorer_root_path, photo.path, 'download') %></span>
+</div>
