@@ -20,7 +20,6 @@ module FilesystemExplorer
     end
 
     def initialize(root, relative_path, options = {})
-      Rails.logger.ap ["options", root, relative_path, options]
       root = [root].flatten
 
       if root.count > 1
