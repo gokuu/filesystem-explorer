@@ -9,7 +9,6 @@ module FilesystemExplorer
     end
 
     def get_photo_thumbnail(thumbnail_size = '300x300', generate_if_missing = true)
-      ap ["get_photo_thumbnail thumbnail_size", thumbnail_size, photo_thumbnail_path(thumbnail_size)]
       if photo_thumbnail_exists?(thumbnail_size)
         photo_thumbnail_filesystem_path(thumbnail_size).sub(File.join(Rails.root, 'public'), '')
       else
