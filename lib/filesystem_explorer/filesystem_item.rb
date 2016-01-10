@@ -4,19 +4,40 @@ module FilesystemExplorer
     attr_reader :full_path
     attr_reader :kind
 
-    def get_photo_thumbnail(thumbnail_size = '300x300')
-      generate_photo_thumbnail! unless File.exists?(photo_thumbnail_path(thumbnail_size))
-      photo_thumbnail_path.sub(File.join(Rails.root, 'public'), '')
+    def photo_thumbnail_exists?(thumbnail_size = '300x300')
+      File.exists?(photo_thumbnail_filesystem_path(thumbnail_size))
+    end
+
+    def get_photo_thumbnail(thumbnail_size = '300x300', generate_if_missing = true)
+      ap ["get_photo_thumbnail thumbnail_size", thumbnail_size, photo_thumbnail_path(thumbnail_size)]
+      if photo_thumbnail_exists?(thumbnail_size)
+        photo_thumbnail_filesystem_path(thumbnail_size).sub(File.join(Rails.root, 'public'), '')
+      else
+        if generate_if_missing == :delay then
+          FilesystemExplorer::FilesystemItemWorker.perform_async @root, @path, thumbnail_size
+        else
+          generate_photo_thumbnail!(thumbnail_size)
+        end
+
+        path
+      end
     end
 
     def photo_thumbnail_path(thumbnail_size = '300x300')
-      thumbnail_part = File.join(thumbnail_size, full_path).gsub(/[?!<>#^%@]/, '').tr(' ', '_').downcase
-      @photo_thumbnail_path ||= File.join(Rails.root, 'public', 'photo_thumbnails', thumbnail_part)
+      thumbnail_part = File.join('/', 'photo_thumbnails', thumbnail_size, full_path).gsub(/[?!<>#^%@]/, '').tr(' ', '_').downcase
+      @photo_thumbnail_path ||= thumbnail_part
     end
 
-    def generate_photo_thumbnail!(thumbnail_size = '300x300')
+    def photo_thumbnail_filesystem_path(thumbnail_size = '300x300')
+      thumbnail_part = File.join(Rails.root, 'public', photo_thumbnail_path(thumbnail_size))
+      @photo_thumbnail_filesystem_path ||= thumbnail_part
+    end
+
+    def generate_photo_thumbnail!(thumbnail_size = '300x300', force = false)
+      return if photo_thumbnail_exists?(thumbnail_size) && !force
+
       processor = Dragonfly.app.fetch_file(full_path).thumb(thumbnail_size)
-      processor.to_file photo_thumbnail_path(thumbnail_size)
+      processor.to_file photo_thumbnail_filesystem_path(thumbnail_size)
     end
 
     def initialize(root, relative_path, options = {})
@@ -113,7 +134,10 @@ module FilesystemExplorer
 
     def is_directory? ; return @is_directory ; end
 
-    def path ; return @path ||= @full_path || (@full_paths && "") ; end
+    def path(root_path = nil)
+      @path ||= @full_path || (@full_paths && "")
+      root_path.nil? ? @path : File.join(root_path, @path)
+    end
     def url ; return @path.split('/').map { |p| URI::escape(p) }.join('/') ; end
 
     def is_root? ; return @is_root ; end
@@ -224,5 +248,6 @@ module FilesystemExplorer
       def build_path(*args)
         File.expand_path(File.join(*args)).gsub(/^#{Dir.pwd}\/?/, '')
       end
+
   end
 end
