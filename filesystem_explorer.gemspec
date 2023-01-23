@@ -17,7 +17,11 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.0.0"
+  s.add_dependency 'dragonfly', '~> 1.0.12'
+  s.add_dependency 'sidekiq', '~> 4.0'
+  s.add_dependency 'sidekiq-unique-jobs', '~> 4.0'
   # s.add_dependency "jquery-rails"
+  s.add_dependency 'sinatra', '>= 0.0'
 
   s.add_development_dependency "sqlite3"
 end

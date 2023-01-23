@@ -1,0 +1,1 @@
+<div><i class="fa fa-folder"></i> <%= link_to folder.is_parent? ? '..' : folder.name, File.join(filesystem_explorer_root_path, u(folder.path)) %></div>

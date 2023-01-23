@@ -10,7 +10,7 @@ module ActionDispatch
           config_data = YAML.load_file(config_file_path)
 
           config_data.each do |route|
-            filesystem_explorer path: route[:path] || route['path'], as: route[:as] || route['as'], url: route[:url] || route['url']
+            filesystem_explorer route.symbolize_keys
           end
         end
 
@@ -21,7 +21,7 @@ module ActionDispatch
         route_config = FilesystemExplorer::FilesystemRouteOptions.new
 
         # Copy all applicable options from the parameter hash to the object
-        %w(path as url).each do |option|
+        %w(path as url kind).each do |option|
           route_config.send option, options[option.to_sym] if options[option.to_sym] && route_config.respond_to?(option)
         end
 
